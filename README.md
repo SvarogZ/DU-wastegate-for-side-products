@@ -51,3 +51,5 @@ Connect next mandatory equipment to the slots and give appropriate names as show
 *ContainerOxygen* - small intermediate container for oxygen
 
 *OxygenWasteGate* - transfer unit to waste the oxygen
+
+As far as the container hub does not return max volume, set your hub volume 'container_size' via Lua parameters.
