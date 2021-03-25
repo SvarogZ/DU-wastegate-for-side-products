@@ -212,8 +212,8 @@ function update()
 		<div class="percent">]]..oxygen_percent..[[%</div>
 		<div class="progress" style="width:]]..oxygen_percent..[[%;background-color:]]..oxygen_color..[[;"></div>
 	</div>
-	<div class="status" style="top:12.5vh;left:3vw;"]]..hydrogen_status..[[</div>
-	<div class="status" style="top:12.5vh;left:55vw;"]]..oxygen_status..[[</div>
+	<div class="status" style="top:12.5vh;left:3vw;">]]..hydrogen_status..[[</div>
+	<div class="status" style="top:12.5vh;left:55vw;">]]..oxygen_status..[[</div>
 	<div class="indicator" style="background-color:]]..indicator_color_current..[[;"></div>
 </div>]])
 end
