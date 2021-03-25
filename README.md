@@ -54,7 +54,7 @@ As far as the container hub does not return max volume, set your hub volume 'con
 
 **How to start the Programming Board**
 
-You can use any logic what you prefer
+You can use any logic you want
 
 ```
 Zone Detector -> OR
