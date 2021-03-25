@@ -1,13 +1,11 @@
 # DU-wastegate-for-side-products
 Dual Universe wastegate for side-products: oxygen and hydrogen
-<br><br>
 
 This logic requires next equipment:
 - main container with a gas
 - small intermediate container
 - transfer unit constantly pumping the gas from the main container to the small intermediate container
 - transfer unit controlled by the script to pump the gas from the small intermediate container to nowhere
-<br><br>
 
 **Connection**
 
@@ -21,20 +19,20 @@ Copy-paste the code (excluding "FILTER UPDATE" and "FILTER STOP" at the end) to 
 
 Copy-paste next code to the 'unit.stop'
 
-```-------------------------
+```
+-------------------------
 -- FILTER STOP ----------
 -------------------------
 stop()
 ```
-<br><br>
 
 Copy-paste next code to the 'unit.tick(update)'
-```-------------------------
+```
+-------------------------
 -- FILTER UPDATE --------
 -------------------------
 update()
 ```
-<br><br>
 
 Connect next mandatory equipment to the slots and give appropriate names as shown below:
 
@@ -53,3 +51,19 @@ Connect next mandatory equipment to the slots and give appropriate names as show
 *OxygenWasteGate* - transfer unit to waste the oxygen
 
 As far as the container hub does not return max volume, set your hub volume 'container_size' via Lua parameters.
+
+**How to start the Programming Board**
+
+You can use any logic what you prefer
+
+```
+Zone Detector -> OR
+OR -> Relay
+Relay -> Programming Board
+Relay -> AND
+AND -> OR
+Button -> NOT
+NOT -> AND
+```
+
+The Button is required to reset the logic in some cases.
