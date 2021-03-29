@@ -136,7 +136,7 @@ local html_head = [[<style>
 -- SCRIPT STOPPED ------
 -------------------------
 function stop()
-	Screen.setHTML(sformat(htmlMessageTemplate,'Script Stopped')
+	Screen.setHTML(sformat(htmlMessageTemplate,'Script Stopped'))
 end
 
 
@@ -177,7 +177,7 @@ function update()
 		then
 		local text = "No Equipment Detected \n Check distance to equipment"
 		if Screen then
-			Screen.setHTML(sformat(htmlMessageTemplate,text)
+			Screen.setHTML(sformat(htmlMessageTemplate,text))
 		end
 		system.print(text)
 		return
@@ -246,7 +246,7 @@ local function checkSlots()
 		..getSlotError(OxygenWasteGate,'industryunit','OxygenWasteGate')
 
 	if text ~= "" then
-		error(text}
+		error(text)
 	end
 end
 
