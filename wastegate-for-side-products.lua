@@ -88,7 +88,7 @@ local html_head = [[<style>
 		height:10.5vh;
 		display:flex;
 		align-items:center;
-		font-size:]]..font_size..[[vw;
+		font-size:]]..font_size..[[vh;
 	}
 	div.number {
 		position:absolute;
@@ -98,6 +98,7 @@ local html_head = [[<style>
 		display:flex;
 		flex-direction:row-reverse;
 		align-items:center;
+		font-size:]]..font_size..[[vh;
 	}
 	div.percent {
 		position:absolute;
@@ -107,6 +108,7 @@ local html_head = [[<style>
 		height:5vh;
 		display:flex;
 		align-items:center;
+		font-size:]]..font_size..[[vh;
 	}
 	div.progress {
 		position:absolute;
@@ -123,7 +125,7 @@ local html_head = [[<style>
 		height: 20vh;
 		width: 45vw;
 		color:]]..font_color..[[;
-		font-size: 10vw;
+		font-size:]]..font_size..[[vh;
 		display:flex;
 		align-items:center;
 		background-color:]]..row_color_2..[[;
