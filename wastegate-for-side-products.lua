@@ -1,16 +1,16 @@
 -------------------------
 -- USER DEFINED DATA ----
 -------------------------
-local hydrogen_level = 4 --export
-local oxygen_level = 4 --export
+local hydrogen_level = 3 --export
+local oxygen_level = 3 --export
 local font_size = 6 --export
 local font_color = "black" --export
 local screen_color = "#979A9A" --export
 local row_color_1 = "#ECF0F1" --export
 local row_color_2 = "#D0D3D4" --export
-local low_low_level = 2 --export
+local low_low_level = 1 --export
 local low_low_level_color = "#922B21" --export
-local low_level = 3 --export
+local low_level = 2 --export
 local low_level_color = "#F1C40F" --export
 local normal_level_color = "#229954" --export
 local high_level = 10 --export
@@ -19,7 +19,7 @@ local high_high_level = 50 --export
 local high_high_level_color = "#922B21" --export
 local update_time = 1 --export
 local indicator_color = "#229954" --export
-local container_size = 153600 --export: temporary
+local container_size = 354000 --export: temporary
 
 
 -------------------------
@@ -170,10 +170,10 @@ local function wasteGate(mainContainerSlot,wasteContainerSlot,transferSlot,level
 end
 
 function update()
-	if not MainContainerHydrogen
+	if not MainContainerHydrogen.getItemsVolume()
 		or not ContainerHydrogen
 		or not HydrogenWasteGate
-		or not MainContainerOxygen
+		or not MainContainerOxygen.getItemsVolume()
 		or not ContainerOxygen
 		or not OxygenWasteGate
 		then
@@ -182,13 +182,14 @@ function update()
 			Screen.setHTML(sformat(htmlMessageTemplate,text))
 		end
 		system.print(text)
+		unit.exit()
 		return
 	end
 
 	if indicator_color_current == indicator_color then indicator_color_current = screen_color else indicator_color_current = indicator_color end
 	--system.print(indicator_color_current)  
+	local oxygen_status = wasteGate(MainContainerOxygen,ContainerOxygen,OxygenWasteGate,oxygen_level)	
 	local hydrogen_status = wasteGate(MainContainerHydrogen,ContainerHydrogen,HydrogenWasteGate,hydrogen_level)
-	local oxygen_status = wasteGate(MainContainerOxygen,ContainerOxygen,OxygenWasteGate,oxygen_level)
 	
 	local hydrogen_volume = MainContainerHydrogen.getItemsVolume()
 	local oxygen_volume = MainContainerOxygen.getItemsVolume()
@@ -209,7 +210,7 @@ function update()
 		<div class="progress" style="width:]]..hydrogen_percent..[[%;background-color:]]..hydrogen_color..[[;"></div>
 	</div>
 	<div class="cell" style="left:55vw;background-color:]]..row_color_1..[[;">
-		<div class="name">Hydrogen</div>
+		<div class="name">Oxygen</div>
 		<div class="number" align="right">]]..number_oxygen..[[</div>
 		<div class="percent">]]..oxygen_percent..[[%</div>
 		<div class="progress" style="width:]]..oxygen_percent..[[%;background-color:]]..oxygen_color..[[;"></div>
@@ -235,16 +236,16 @@ local function checkSlots()
 		elseif slot.getElementClass():lower() ~= slotClass then
 			text = text.."'"..slotName.."' must be '"..slotClass.."'\n"
 		end
-		--system.print('slotName = '..slot.getElementClass():lower())
+		system.print('slotName = '..slot.getElementClass():lower())
 		return text
 	end
 
 	local text = getSlotError(Screen,'screenunit','Screen')
 		..getSlotError(MainContainerHydrogen,'itemcontainer','MainContainerHydrogen')
-		..getSlotError(ContainerHydrogen,'itemcontainer','ContainerHydrogen')
+		..getSlotError(ContainerHydrogen,'containersmallgroup','ContainerHydrogen')
 		..getSlotError(HydrogenWasteGate,'industryunit','HydrogenWasteGate')
 		..getSlotError(MainContainerOxygen,'itemcontainer','MainContainerOxygen')
-		..getSlotError(ContainerOxygen,'itemcontainer','ContainerOxygen')
+		..getSlotError(ContainerOxygen,'containersmallgroup','ContainerOxygen')
 		..getSlotError(OxygenWasteGate,'industryunit','OxygenWasteGate')
 
 	if text ~= "" then
