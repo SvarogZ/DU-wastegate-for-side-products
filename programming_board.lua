@@ -14,13 +14,13 @@ local indicator_status = false
 -------------------------
 -- SLOTS ALLOCATION -----
 -------------------------
-local Screen = Slot1
-local MainContainerHydrogen = Slot2
-local ContainerHydrogen = Slot3
-local HydrogenWasteGate = Slot4
-local MainContainerOxygen = Slot5
-local ContainerOxygen = Slot6
-local OxygenWasteGate = Slot7
+local Screen = slot1
+local MainContainerHydrogen = slot2
+local ContainerHydrogen = slot3
+local HydrogenWasteGate = slot4
+local MainContainerOxygen = slot5
+local ContainerOxygen = slot6
+local OxygenWasteGate = slot7
 
 -------------------------
 -- AUXILIARY FUNCTIONS --
@@ -33,7 +33,7 @@ end
 local function printErrorMessage(text, screen)
 	system.print(text)
 	if screen and screen.setScriptInput then
-		local data_to_send{}
+		local data_to_send = {}
 		data_to_send.error = text
 		screen.setScriptInput(json.encode(data_to_send))
 	end
@@ -68,7 +68,7 @@ local function checkSlots()
 			then
 			local text = "No equipment detected! Check the distance to the equipment"
 			printErrorMessage(text, Screen)
-			unit.exit()
+			return false
 		end
 		
 		if not hydrogen_level or not oxygen_level then
@@ -145,22 +145,26 @@ local function wasteGate(mainContainerSlot,wasteContainerSlot,transferSlot,level
 end
 
 function update()
-	if not checkSlots() then return end
+	if not checkSlots() then
+		unit.exit()
+		return
+	end
 	
 	local data_to_send = {}
 	
-	local oxygen_status = wasteGate(MainContainerOxygen,ContainerOxygen,OxygenWasteGate,oxygen_level)
-	data_to_send[1] = oxygen_status
-	
-	local hydrogen_status = wasteGate(MainContainerHydrogen,ContainerHydrogen,HydrogenWasteGate,hydrogen_level)
-	data_to_send[2] = hydrogen_status
+		
+	local hydrogen_volume = MainContainerHydrogen.getItemsVolume()
+	data_to_send[1] = round(hydrogen_volume)
 	
 	local oxygen_volume = MainContainerOxygen.getItemsVolume()
-	data_to_send[3] = round(oxygen_volume)
+	data_to_send[2] = round(oxygen_volume)
 	
-	local hydrogen_volume = MainContainerHydrogen.getItemsVolume()
-	data_to_send[4] = round(hydrogen_volume)
+	local hydrogen_status = wasteGate(MainContainerHydrogen,ContainerHydrogen,HydrogenWasteGate,hydrogen_level)
+	data_to_send[3] = hydrogen_status
 	
+	local oxygen_status = wasteGate(MainContainerOxygen,ContainerOxygen,OxygenWasteGate,oxygen_level)
+	data_to_send[4] = oxygen_status
+
 	if indicator_status == true then indicator_status = false else indicator_status = true end
 	data_to_send[5] = indicator_status
 	--system.print(indicator_status)  
@@ -172,15 +176,15 @@ end
 -- SCRIPT STOPPED ------
 -------------------------
 function stop()
-	printErrorMessage("Script Stopped", Screen)
+	if is_all_slots_connected then
+		printErrorMessage("Script Stopped", Screen)
+	end
 end
 
 
 -------------------------
 -- CODE -----------------
 -------------------------
-checkSlots()
-
 unit.setTimer("update", update_time)
 
 
