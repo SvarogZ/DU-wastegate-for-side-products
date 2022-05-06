@@ -10,13 +10,13 @@ local container_size = 384000
 local turn_screen = false
 local list_by_row = false
 local col_number = 2
-local row_number = 8
+local row_number = 2
 local bezel = 5
 local font_name_for_name = "FiraMono"
-local font_name_size = 30
+local font_name_size = 40
 local font_name_for_number = "FiraMono"
-local font_number_size = 30
-local percent_precision = 0 -- 0.01 / 0.1 / 0
+local font_number_size = 40
+local percent_precision = 1 -- 0.01 / 0.1 / 0
 local text_horizontal_shift = 5
 local text_vertical_shift = 10
 local bar_indicator_height = 10
@@ -52,7 +52,7 @@ local json = require "dkjson"
 -------------------------
 -- VARIABLES ------------
 -------------------------
-local screenData = [hydrogen_level, oxygen_level]
+local screenData = {hydrogen_level, oxygen_level}
 
 local screenWidth, screenHeight = getResolution()
 
@@ -172,15 +172,28 @@ local function processData(dataFromPB)
 			if percent < 5 then percent = 5 end
 			cell.barPercent = percent
 		end
-		dataToShow[i] = cell
+		
+		return cell
+	end
+	
+	local function getStatus(n)
+		if n == 0 then
+			return "Wastegate is stopped"
+		elseif  n == 1 then
+			return "Wastegate in operation"
+		elseif  n == 2 then
+			return "Wastegate is stopping"
+		end
+		
+		return "Unknown status"
 	end
 
 	local dataToShow = {}
 	
-	dataToShow[1] = getDataToShow("Hydrogen", dataFromPB[3])
-	dataToShow[2] = getDataToShow("Oxygen", dataFromPB[4])
-	dataToShow[3] = getDataToShow(dataFromPB[1])
-	dataToShow[4] = getDataToShow(dataFromPB[2])
+	dataToShow[1] = getDataToShow("Hydrogen", dataFromPB[1])
+	dataToShow[2] = getDataToShow("Oxygen", dataFromPB[2])
+	dataToShow[3] = getDataToShow(getStatus(dataFromPB[3]))
+	dataToShow[4] = getDataToShow(getStatus(dataFromPB[4]))
 
 	return dataToShow
 end
@@ -222,11 +235,11 @@ local function drawCell(row ,col, data)
 			addText(tableLayer, fontForNumber, percent, cellX+cellWidth-text_horizontal_shift, cellY+cellHeight-text_vertical_shift-bar_indicator_height)
 		end
 		
-		local nameArray = getTextWrapped(fontForName,name,cellWidth-3*text_horizontal_shift-rightShift) or {"nil"}
+		local nameArray = getTextWrapped(fontForName,tostring(name),cellWidth-3*text_horizontal_shift-rightShift) or {"nil"}
 		local lineVerticalShift = (cellHeight-bar_indicator_height)/(1+#nameArray)
 		
 		for i,nameLine in ipairs(nameArray) do
-			setNextTextAlign (tableLayer, 0, 3)
+			setNextTextAlign(tableLayer, 0, 3)
 			addText(tableLayer, fontForName, nameLine, cellX+text_horizontal_shift, cellY+i*lineVerticalShift)
 		end
 	end
@@ -247,14 +260,19 @@ r,g,b = hex2rgb(font_color)
 setDefaultFillColor (tableLayer, 7, r, g, b, 1)--text
 
 if dataFromPB and dataFromPB.error then
-	setNextTextAlign (tableLayer, 1, 3)
-	addText(tableLayer, fontForName, dataFromPB.error, screenWidth/2, screenHeight/2)
+	local nameArray = getTextWrapped(fontForName, dataFromPB.error, screenWidth) or {"nil"}
+	local lineVerticalShift = screenHeight/(1+#nameArray)
+	
+	for i,nameLine in ipairs(nameArray) do
+		setNextTextAlign (tableLayer, 1, 3)
+		addText(tableLayer, fontForName, nameLine, screenWidth/2, i*lineVerticalShift)
+	end
+
 	return
 end
 
 local dataToShow = processData(dataFromPB)
 local blinkIndicator = dataFromPB and dataFromPB[5] or false
-
 
 
 for i = 0,row_number - 1 do
