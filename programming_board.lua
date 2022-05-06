@@ -24,7 +24,12 @@ local OxygenWasteGate = Slot7
 
 -------------------------
 -- AUXILIARY FUNCTIONS --
--------------------------	
+-------------------------
+local function round(value, precision)
+	if precision then return round(value / precision) * precision end
+	return value >= 0 and math.floor(value+0.5) or math.ceil(value-0.5)
+end
+
 local function printErrorMessage(text, screen)
 	system.print(text)
 	if screen and screen.setScriptInput then
@@ -151,12 +156,12 @@ function update()
 	data_to_send[2] = hydrogen_status
 	
 	local oxygen_volume = MainContainerOxygen.getItemsVolume()
-	data_to_send[3] = oxygen_volume
+	data_to_send[3] = round(oxygen_volume)
 	
 	local hydrogen_volume = MainContainerHydrogen.getItemsVolume()
-	data_to_send[4] = hydrogen_volume
+	data_to_send[4] = round(hydrogen_volume)
 	
-	if indicator_status == 1 then indicator_status = 0 else indicator_status = 1 end
+	if indicator_status == true then indicator_status = false else indicator_status = true end
 	data_to_send[5] = indicator_status
 	--system.print(indicator_status)  
 
@@ -175,16 +180,13 @@ end
 -- CODE -----------------
 -------------------------
 checkSlots()
-
 unit.setTimer("update", update_time)
-
 
 
 -------------------------
 -- FILTER UPDATE --------
 -------------------------
 update()
-
 
 
 -------------------------
