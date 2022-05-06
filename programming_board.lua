@@ -9,7 +9,7 @@ local update_time = 1 --export
 local is_all_slots_connected = false
 local hydrogen_level
 local oxygen_level
-local indicator_status = 0
+local indicator_status = false
 
 -------------------------
 -- SLOTS ALLOCATION -----
@@ -66,7 +66,7 @@ local function checkSlots()
 			or not ContainerOxygen or not ContainerOxygen.getItemsVolume
 			or not OxygenWasteGate
 			then
-			local text = "No equipment detected!\n Check the distance to the equipment"
+			local text = "No equipment detected! Check the distance to the equipment"
 			printErrorMessage(text, Screen)
 			unit.exit()
 		end
@@ -180,13 +180,16 @@ end
 -- CODE -----------------
 -------------------------
 checkSlots()
+
 unit.setTimer("update", update_time)
+
 
 
 -------------------------
 -- FILTER UPDATE --------
 -------------------------
 update()
+
 
 
 -------------------------
