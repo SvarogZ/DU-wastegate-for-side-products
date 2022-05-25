@@ -30,8 +30,8 @@ local row_color_2 = "#D0D3D4"
 -- Level settings in %
 local low_low_level = 1
 local low_level = 2
-local high_level = 50
-local high_high_level = 70
+local high_level = 10
+local high_high_level = 50
 
 -- Level color settings
 local normal_level_color = "#229954"
