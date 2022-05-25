@@ -59,11 +59,11 @@ end
 local function checkSlots()
 	
 	if is_all_slots_connected then
-		if not MainContainerHydrogen or not MainContainerHydrogen.getItemsVolume
-			or not ContainerHydrogen or not ContainerHydrogen.getItemsVolume
+		if not MainContainerHydrogen or not MainContainerHydrogen.getItemsVolume or not MainContainerHydrogen.getItemsVolume()
+			or not ContainerHydrogen or not ContainerHydrogen.getItemsVolume or not ContainerHydrogen.getItemsVolume()
 			or not HydrogenWasteGate
-			or not MainContainerOxygen or not MainContainerOxygen.getItemsVolume
-			or not ContainerOxygen or not ContainerOxygen.getItemsVolume
+			or not MainContainerOxygen or not MainContainerOxygen.getItemsVolume or not MainContainerOxygen.getItemsVolume()
+			or not ContainerOxygen or not ContainerOxygen.getItemsVolume or not ContainerOxygen.getItemsVolume()
 			or not OxygenWasteGate
 			then
 			local text = "No equipment detected! Check the distance to the equipment"
