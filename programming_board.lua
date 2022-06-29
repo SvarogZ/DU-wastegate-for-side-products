@@ -57,7 +57,6 @@ end
 -- CHECK SLOTS ----------
 -------------------------
 local function checkSlots()
-	
 	if is_all_slots_connected then
 		if not MainContainerHydrogen or not MainContainerHydrogen.getItemsVolume or not MainContainerHydrogen.getItemsVolume()
 			or not ContainerHydrogen or not ContainerHydrogen.getItemsVolume or not ContainerHydrogen.getItemsVolume()
@@ -87,7 +86,7 @@ local function checkSlots()
 			return false
 		end
 		
-		if not slot.getElementClass or slot.getElementClass():lower() ~= slotClass then
+		if not slot.getClass or slot.getClass():lower() ~= slotClass then
 			local text = "Disconnect last element. This is not a "..slotName.."."
 			printErrorMessage(text, Screen)
 			return false
@@ -125,21 +124,21 @@ end
 local function wasteGate(mainContainerSlot,wasteContainerSlot,transferSlot,level)
 	if mainContainerSlot.getItemsVolume() > level then	 
 		if wasteContainerSlot.getItemsVolume()/wasteContainerSlot.getMaxVolume() > 0.99 then
-			--system.print(transferSlot.getStatus())
-			if transferSlot.getStatus() == "STOPPED" then
+			--system.print(transferSlot.getState())
+			if transferSlot.getState() == 1 then
 				--system.print("start")
-				transferSlot.start()
+				transferSlot.startRun()
 			else
 				--system.print("hard stop")
-				transferSlot.hardStop(1)
+				transferSlot.stop(true,true)
 			end
 		end
 		return 1 -- wastegate in operation
-	elseif transferSlot.getStatus() == "STOPPED" then
+	elseif transferSlot.getState() == 1 then
 		return 0 -- wastegate is stopping
 	else
 		--system.print("stop")
-		transferSlot.hardStop(1)
+		transferSlot.stop(true,true)
 		return 2 -- wastegate is stopped
 	end
 end
@@ -189,14 +188,14 @@ unit.setTimer("update", update_time)
 
 
 
--------------------------
--- FILTER UPDATE --------
--------------------------
+----------------------------------
+-- FILTER onTimer(update) --------
+----------------------------------
 update()
 
 
 
 -------------------------
--- FILTER STOP ----------
+-- FILTER onStop() ------
 -------------------------
 stop()
